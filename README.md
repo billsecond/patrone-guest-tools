@@ -7,12 +7,31 @@ and every install), and `patrone-desktop` recommends it. Each part runs only
 under its own hypervisor (systemd's `ConditionVirtualization=microsoft` or
 `oracle`), so a computer that isn't a virtual machine starts none of it.
 
-Build it on the dev VM with `./packaging/build.sh patrone-guest-tools`.
+It works the same on Ubuntu 26.04 (and systems built on it) as a guest:
+installed on its own, it's what it says, and nothing starts outside a
+virtual machine.
+## Installing
+
+- **PatroneOS** has it already.
+- **Ubuntu 26.04 and systems built on it:** from Patrone's apt
+  repository, which keeps it up to date
+  ([billsecond/patrone-apt](https://github.com/billsecond/patrone-apt),
+  "Patrone's apps on Ubuntu"), then `sudo apt install patrone-guest-tools`. Or
+  download the `.deb` from the
+  [latest release](https://github.com/billsecond/patrone-guest-tools/releases/latest)
+  and open it. VirtualBox's part needs Ubuntu's `multiverse` component, which
+  Ubuntu turns on by default.
+
+Its history up to here is from PatroneOS's repository,
+[billsecond/patroneos](https://github.com/billsecond/patroneos), where it
+lived in its own folder; pull request numbers in those commits are that
+repository's.
+
+Build it with `tools/build-deb.sh`, into `out/`.
 
 **Source and licences.** The package's own files (units, drop-ins, udev
-rule and scripts) are GPL-3.0-or-later, and their source is this folder
-and `packaging/patrone-guest-tools/` in Patrone's repository, which isn't
-public yet (the ISO's source offer is still to do, `docs/COMPLIANCE.md`).
+rule and scripts) are GPL-3.0-or-later, and their source is this
+repository.
 What it depends on is Ubuntu's, unchanged, with source in Ubuntu's archive:
 the Hyper-V daemons from the kernel's source package, `linux` (GPL-2.0), and
 VirtualBox's guest utilities from `virtualbox` (GPL-3.0, in multiverse).
@@ -278,3 +297,12 @@ else starts it.
 ---
 
 Hyper-V and Windows are trademarks of the Microsoft group of companies.
+
+## Releases
+
+A tag `vVERSION`, where VERSION is `debian/changelog`'s, makes a GitHub
+release (`.github/workflows/release.yml`): the `.deb`, built in a clean
+Ubuntu 26.04 container, the source tarball (`git archive` of the tag) and
+`SHA256SUMS`. PatroneOS builds its own package from that tarball: its
+repository pins the release in `packaging/patrone-guest-tools/release.txt`, and moving
+the pin on its `main` publishes it to Patrone's apt repository.
